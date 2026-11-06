@@ -34,7 +34,6 @@ window.CONTENT = {
     { name: "Yara" },
     { name: "Habiba" },
     { name: "Nouran" },
-    { name: "Nariman" },
     { name: "Sara" },
     { name: "Hanna" },
     { name: "Duaa" },
