@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Osha's Last Fling 🐪 Fayoum</title>
+  <meta name="description" content="Sand, clay, henna & one very lucky bride-to-be. Brush away the sand to find your invite." />
+  <meta name="theme-color" content="#F3E3C3" />
+
+  <!-- Link preview (WhatsApp / iMessage). og:image must be an ABSOLUTE url once hosted. -->
+  <meta property="og:title" content="Osha's Last Fling 🐪" />
+  <meta property="og:description" content="Brush away the sand to find your invite 🏜️ Fayoum, Egypt" />
+  <meta property="og:type" content="website" />
+  <!-- TODO: <meta property="og:image" content="https://YOUR-SITE/img/preview.jpg" /> -->
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐪</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,600,100;1,9..144,500,100;1,9..144,800,100&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ================= GATE: brush the sand ================= -->
+  <div id="gate" class="gate" aria-label="Entry game: brush the sand to reveal your invitation">
+    <div class="invite">
+      <div class="invite__stamp">✦ Fayoum ✦</div>
+      <div class="invite__pot" aria-hidden="true">🏺</div>
+      <p class="hand invite__found" data-c="gate.foundTitle"></p>
+      <h1 class="invite__title" data-c="tripName"></h1>
+      <p class="invite__dates"><span data-c="datesLabel"></span> · <span data-c="location"></span></p>
+      <p class="invite__body" data-c="gate.foundBody"></p>
+      <button class="btn btn--clay invite__enter" id="enterBtn" type="button" data-c="gate.enterLabel"></button>
+    </div>
+
+    <canvas id="sand" class="gate__sand" aria-hidden="true"></canvas>
+    <canvas id="grains" class="gate__grains" aria-hidden="true"></canvas>
+
+    <div class="gate__hud" id="gateHud">
+      <div class="gate__meter" role="progressbar" aria-label="Excavation progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span id="digBar"></span>
+      </div>
+      <p class="gate__label">Excavation: <b id="digPct">0</b>% 🪮</p>
+      <button type="button" class="link-btn" id="skipBtn">I'm impatient — dig for me</button>
+    </div>
+  </div>
+
+  <!-- ================= SITE ================= -->
+  <main id="site" class="site" aria-hidden="true">
+
+    <!-- HERO -->
+    <header class="hero" id="home">
+      <div class="sun" aria-hidden="true"></div>
+      <div class="hero__inner">
+        <h1 class="hero__title" data-c="tripName"></h1>
+        <p class="hero__tag" data-c="tagline"></p>
+        <p class="hero__meta"><span>📍 <span data-c="location"></span></span><span>🗓️ <span data-c="datesLabel"></span></span></p>
+
+        <div class="countdown" id="countdown" aria-live="polite">
+          <div class="cd"><b data-cd="d">00</b><small>days</small></div>
+          <div class="cd"><b data-cd="h">00</b><small>hrs</small></div>
+          <div class="cd"><b data-cd="m">00</b><small>min</small></div>
+          <div class="cd"><b data-cd="s">00</b><small>sec</small></div>
+        </div>
+        <p class="hand countdown__msg" id="cdMsg">until we hit the dunes</p>
+      </div>
+
+      <!-- dunes + walking camel -->
+      <div class="dunes" aria-hidden="true">
+        <svg viewBox="0 0 1200 220" preserveAspectRatio="none" class="dunes__back"><path d="M0 140 C 200 60, 380 60, 560 130 S 900 200, 1200 110 L1200 220 L0 220Z"/></svg>
+        <button type="button" class="camel" id="camel" aria-label="Pet the camel">🐪<span class="camel__say" id="camelSay"></span></button>
+        <svg viewBox="0 0 1200 220" preserveAspectRatio="none" class="dunes__front"><path d="M0 170 C 260 110, 420 200, 700 160 S 1050 120, 1200 170 L1200 220 L0 220Z"/></svg>
+      </div>
+    </header>
+
+    <!-- SQUAD -->
+    <section class="section section--sand" id="squad">
+      <div class="wrap">
+        <h2 class="h2"><span class="h2__icon">💃</span> Meet the squad</h2>
+        <p class="sub hand">tap a card to flip it ↻</p>
+        <div class="squad" id="squadGrid"></div>
+      </div>
+    </section>
+
+    <!-- ITINERARY -->
+    <section class="section section--cream" id="plan">
+      <div class="wrap">
+        <h2 class="h2"><span class="h2__icon">🗓️</span> The plan</h2>
+        <p class="sub hand">no strict schedule, we're winging it ✨</p>
+        <div class="days" id="dayTabs" role="tablist" aria-label="Trip days"></div>
+        <div class="day" id="dayPanel" role="tabpanel"></div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="section section--lake" id="map">
+      <div class="wrap">
+        <h2 class="h2"><span class="h2__icon">🗺️</span> Fayoum, decoded</h2>
+        <div class="map">
+          <svg viewBox="0 0 400 300" class="map__svg" id="mapSvg" role="img" aria-label="Illustrated map of Fayoum">
+            <defs>
+              <pattern id="dots" width="8" height="8" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1" fill="#D9B77F" />
+              </pattern>
+            </defs>
+            <rect width="400" height="300" rx="22" fill="#F3E3C3" />
+            <rect width="400" height="300" rx="22" fill="url(#dots)" opacity=".7" />
+            <!-- green oasis -->
+            <path d="M210 110 C 260 100, 340 120, 360 170 C 370 220, 300 250, 250 230 C 200 215, 190 150, 210 110Z" fill="#B9C98A" opacity=".75" />
+            <!-- Lake Qarun -->
+            <path d="M120 72 C 170 40, 300 40, 360 62 C 380 72, 360 96, 320 96 C 260 100, 180 102, 140 96 C 110 92, 105 82, 120 72Z" fill="#5FB3BF" />
+            <path d="M150 74 q20 -6 40 0 M240 66 q20 -6 40 0" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7" />
+            <!-- Wadi El Rayan lakes -->
+            <ellipse cx="135" cy="195" rx="34" ry="17" fill="#5FB3BF" />
+            <ellipse cx="172" cy="226" rx="26" ry="14" fill="#5FB3BF" />
+            <path d="M150 205 l8 10" stroke="#fff" stroke-width="3" stroke-linecap="round" />
+            <!-- Magic lake -->
+            <circle cx="92" cy="178" r="10" fill="#C18FD0" />
+            <!-- dunes -->
+            <path d="M20 250 q25 -22 50 0 q25 -22 50 0 M250 280 q20 -18 40 0 q20 -18 40 0" stroke="#C99A5B" stroke-width="3" fill="none" stroke-linecap="round" />
+            <!-- road to Cairo -->
+            <path d="M300 170 C 330 150, 350 120, 395 100" stroke="#9C4426" stroke-dasharray="5 6" stroke-width="2.5" fill="none" />
+            <text x="388" y="92" text-anchor="end" class="map__label">Cairo ~2h →</text>
+            <circle cx="300" cy="170" r="5" fill="#9C4426" />
+            <text x="300" y="190" text-anchor="middle" class="map__label">Fayoum city</text>
+            <!-- compass -->
+            <g transform="translate(360 255)" class="map__compass"><circle r="16" fill="#FFF8EC" stroke="#C99A5B" stroke-width="2"/><path d="M0 -12 L5 4 L0 0 L-5 4Z" fill="#C8643B"/><text y="-19" text-anchor="middle" class="map__label">N</text></g>
+            <g id="pins"></g>
+          </svg>
+          <div class="map__card" id="mapCard" aria-live="polite">
+            <p class="map__cardTitle">👆 Pick a spot</p>
+            <p class="map__cardBody">Every pin is somewhere we might go (or fall in love with).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO -->
+    <section class="section section--clay" id="info">
+      <div class="wrap">
+        <h2 class="h2"><span class="h2__icon">🧭</span> Know before you go</h2>
+        <p class="sub hand">the boring-but-important bits, made cute</p>
+        <div class="faq" id="faq"></div>
+      </div>
+    </section>
+
+    <!-- PACKING -->
+    <section class="section section--sand" id="pack">
+      <div class="wrap">
+        <h2 class="h2"><span class="h2__icon">🧳</span> Pack your bags</h2>
+        <p class="sub hand">ticks are saved on your phone ✓</p>
+        <div class="pack__progress">
+          <div class="pot-meter" aria-hidden="true"><span id="potFill"></span><i>🏺</i></div>
+          <p><b id="packCount">0</b> / <span id="packTotal">0</span> packed</p>
+        </div>
+        <div class="pack" id="packList"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p class="hand" data-c="footer"></p>
+      <button type="button" class="link-btn" id="replayBtn">↺ replay the dig</button>
+    </footer>
+
+    <!-- bottom nav -->
+    <nav class="dock" aria-label="Sections">
+      <a href="#home" aria-label="Home">🏠<span>Home</span></a>
+      <a href="#squad" aria-label="Squad">💃<span>Squad</span></a>
+      <a href="#plan" aria-label="Plan">🗓️<span>Plan</span></a>
+      <a href="#map" aria-label="Map">🗺️<span>Map</span></a>
+      <a href="#info" aria-label="Info">🧭<span>Info</span></a>
+      <a href="#pack" aria-label="Packing">🧳<span>Pack</span></a>
+    </nav>
+  </main>
+
+  <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
