@@ -1,3 +1,10 @@
 .DS_Store
 node_modules/
 .vercel/
+/*.jpeg
+/*.jpg
+/*.JPG
+/*.png
+/*.heic
+/*.HEIC
+/*.JPEG

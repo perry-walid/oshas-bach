@@ -60,6 +60,7 @@
     site.classList.add("is-on");
     if (instant) { gate.classList.add("is-gone"); }
     else {
+      toTop();
       gate.classList.add("is-leaving");
       setTimeout(() => gate.classList.add("is-gone"), 950);
       setTimeout(() => confetti.burst(innerWidth / 2, innerHeight * .35, 160), 350);
@@ -67,8 +68,13 @@
     startHero();
   }
 
+  function toTop() {
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }
+
   $("#enterBtn").addEventListener("click", () => openSite(false));
-  $("#replayBtn").addEventListener("click", () => { store.del(SEEN_KEY); location.reload(); });
+  $("#replayBtn").addEventListener("click", () => { store.del(SEEN_KEY); toTop(); location.reload(); });
 
   function initSand() {
     const cv = $("#sand"), ctx = cv.getContext("2d");
@@ -281,33 +287,69 @@
   });
 
   /* =========================================================
-     SQUAD flip cards
+     SQUAD — polaroid wall + zoom lightbox
      ========================================================= */
-  const squadGrid = $("#squadGrid");
   const squadEmojis = ["💃", "✨", "🌵", "🏺", "🌅", "🐪", "💖", "🌙", "🪩", "🍉", "🌸", "🦋", "🥂", "🌴", "🎀", "⭐", "🍓", "🐚", "🌻", "💫", "🫶"];
   const backLines = ["Bride Tribe 💛", "Fayoum-ready ✨", "Dune & done 🏜️", "Here for the henna 🌿", "Pottery pro (soon) 🏺", "Lake Qarun, here we come 🛶"];
-  (C.squad || []).forEach((p, i) => {
+  const rots = [-3, 2, -1.5, 3, -2.5, 1.5, -1, 2.5];
+  const squad = (C.squad || []).map((p, i) => ({
+    ...p,
+    role: p.role || "Bride Tribe",
+    star: Boolean(p.role),
+    emoji: p.emoji || squadEmojis[i % squadEmojis.length],
+    fact: p.fact || backLines[i % backLines.length],
+  }));
+  const photoHTML = (p, lazy) => p.photo
+    ? `<img src="${esc(p.photo)}" alt="${esc(p.name)}" ${lazy ? 'loading="lazy"' : ""} decoding="async">`
+    : `<span aria-hidden="true">${esc(p.emoji)}</span>`;
+
+  squad.forEach((p, i) => {
     const b = document.createElement("button");
-    const role = p.role || "Bride Tribe";
     b.type = "button";
-    b.className = "card reveal" + (i === 0 ? " card--bride" : "") + (p.role ? " card--vip" : "");
-    b.style.transitionDelay = (i % 3) * 60 + "ms";
-    b.setAttribute("aria-label", `${p.name}, ${role}. Tap to flip.`);
-    b.innerHTML = `
-      <div class="card__inner">
-        <div class="card__face card__face--front">
-          <div class="card__avatar">${p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy">` : esc(p.emoji || squadEmojis[i % squadEmojis.length])}</div>
-          <div class="card__name">${esc(p.name)}</div>
-          <div class="card__role">${esc(role)}</div>
-        </div>
-        <div class="card__face card__face--back">
-          <div class="hand">${esc(p.name)}</div>
-          <div class="card__fact">${esc(p.fact || backLines[i % backLines.length])}</div>
-        </div>
-      </div>`;
-    b.addEventListener("click", () => b.classList.toggle("is-flipped"));
-    squadGrid.appendChild(b);
+    b.className = "pol" + (p.star ? " pol--star" : "") + (i === 0 ? " pol--bride" : "");
+    b.style.setProperty("--rot", rots[i % rots.length] + "deg");
+    b.setAttribute("aria-label", `${p.name}, ${p.role}. Open photo.`);
+    b.innerHTML = `<span class="pol__photo">${photoHTML(p, true)}</span><span class="pol__name">${esc(p.name)}</span>${p.star ? `<span class="pol__role">${esc(p.role)}</span>` : ""}`;
+    b.addEventListener("click", () => openLightbox(i));
+    (p.star ? $("#squadStars") : $("#squadGrid")).appendChild(b);
   });
+
+  const lb = $("#lightbox"), lbBody = $("#lbBody");
+  let lbIndex = 0, lbReturn = null;
+  function renderLightbox() {
+    const p = squad[lbIndex];
+    lbBody.innerHTML = `
+      <div class="pol${lbIndex === 0 ? " pol--bride" : ""}">
+        <span class="pol__photo">${photoHTML(p)}</span>
+        <span class="pol__name">${esc(p.name)}</span>
+        <span class="pol__role">${esc(p.role)}</span>
+        <p class="lightbox__fact">${esc(p.fact)}</p>
+      </div>`;
+  }
+  function openLightbox(i) {
+    lbIndex = i; lbReturn = document.activeElement;
+    renderLightbox(); lb.hidden = false; document.body.classList.add("locked");
+    $("#lbClose").focus({ preventScroll: true });
+  }
+  function closeLightbox() {
+    lb.hidden = true; document.body.classList.remove("locked");
+    if (lbReturn) lbReturn.focus({ preventScroll: true });
+  }
+  const step = (d) => { lbIndex = (lbIndex + d + squad.length) % squad.length; renderLightbox(); };
+  $("#lbClose").addEventListener("click", closeLightbox);
+  $("#lbPrev").addEventListener("click", () => step(-1));
+  $("#lbNext").addEventListener("click", () => step(1));
+  lb.addEventListener("click", (e) => { if (e.target === lb) closeLightbox(); });
+  addEventListener("keydown", (e) => {
+    if (lb.hidden) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowRight") step(1);
+    if (e.key === "ArrowLeft") step(-1);
+  });
+  // swipe left/right inside the lightbox
+  let sx = null;
+  lb.addEventListener("pointerdown", (e) => { sx = e.clientX; });
+  lb.addEventListener("pointerup", (e) => { if (sx !== null && Math.abs(e.clientX - sx) > 50) step(e.clientX < sx ? 1 : -1); sx = null; });
 
   /* =========================================================
      ITINERARY
@@ -348,35 +390,6 @@
     tabs.appendChild(t);
   });
   if (days.length) showDay(0);
-
-  /* =========================================================
-     MAP pins
-     ========================================================= */
-  const NS = "http://www.w3.org/2000/svg";
-  const pinsG = $("#pins"), card = $("#mapCard");
-  (C.spots || []).forEach((s, i) => {
-    const outer = document.createElementNS(NS, "g");
-    outer.setAttribute("transform", `translate(${s.x} ${s.y})`);
-    const pin = document.createElementNS(NS, "g");
-    pin.setAttribute("class", "pin");
-    pin.setAttribute("tabindex", "0");
-    pin.setAttribute("role", "button");
-    pin.setAttribute("aria-label", s.name);
-    pin.innerHTML = `
-      <circle class="pin__hit" r="22"></circle>
-      <circle class="pin__pulse" r="15"></circle>
-      <circle class="pin__bg" r="15"></circle>
-      <text text-anchor="middle" dominant-baseline="central" y="1">${esc(s.emoji)}</text>`;
-    const select = () => {
-      $$(".pin", pinsG).forEach((p) => p.classList.remove("is-active"));
-      pin.classList.add("is-active");
-      card.innerHTML = `<p class="map__cardTitle">${esc(s.emoji)} ${esc(s.name)}</p><p class="map__cardBody">${esc(s.blurb)}</p>${s.maps ? `<a href="${esc(s.maps)}" target="_blank" rel="noopener">Open in Google Maps ↗</a>` : ""}`;
-      card.classList.remove("pop"); void card.offsetWidth; card.classList.add("pop");
-    };
-    pin.addEventListener("click", select);
-    pin.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(); } });
-    outer.appendChild(pin); pinsG.appendChild(outer);
-  });
 
   /* =========================================================
      FAQ
@@ -441,6 +454,9 @@
   if (store.get(SEEN_KEY, false)) {
     openSite(true);
   } else {
+    // always start the dig (and the site after it) from the very top
+    try { history.scrollRestoration = "manual"; } catch {}
+    toTop();
     document.body.classList.add("locked");
     initSand();
   }

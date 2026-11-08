@@ -26,27 +26,29 @@ window.CONTENT = {
   // role is optional (defaults to "Bride Tribe"). fact is optional (shown on the back).
   // Add a photo by putting it in /img and setting photo: "img/name.jpg"
   squad: [
-    { name: "Osha",     role: "The Bride 👰", emoji: "👰‍♀️" },
-    { name: "Sara",     role: "Sister of the Bride", emoji: "👯‍♀️" },
-    { name: "Perry" },
-    { name: "Nouni" },
-    { name: "Shrouk" },
-    { name: "Yara" },
-    { name: "Habiba" },
-    { name: "Nouran" },
-    { name: "Sara" },
-    { name: "Hanna" },
-    { name: "Duaa" },
-    { name: "Nada" },
-    { name: "Menna" },
-    { name: "Joly" },
-    { name: "Radwa" },
-    { name: "Salma" },
-    { name: "Reem" },
-    { name: "Roba" },
-    { name: "Alaa" },
-    { name: "Nawara" },
-    { name: "Bona" },
+    { name: "Osha",     role: "The Bride 👰", emoji: "👰‍♀️", photo: "img/osha.jpg" },
+    { name: "Sara",     role: "Sister of the Bride", emoji: "👯‍♀️", photo: "img/sara2.jpg" },
+    { name: "Perry", photo: "img/perry.jpg" },
+    { name: "Nouni", photo: "img/nouni.jpg" },
+    { name: "Shosha", photo: "img/shrouk.jpg" },
+    { name: "Yara", photo: "img/yara.jpg" },
+    { name: "Habiba", photo: "img/habiba.jpg" },
+    { name: "Nouran", photo: "img/nouran.jpg" },
+    { name: "Sossa", photo: "img/sossa.jpg" },
+    { name: "Hania", photo: "img/hana.jpg" },
+    { name: "Duaa", photo: "img/duaa.jpg" },
+    { name: "Nada", photo: "img/nada.jpg" },
+    { name: "Menna", photo: "img/menna.jpg" },
+    { name: "Joly", photo: "img/joly.jpg" },
+    { name: "Rosa", photo: "img/rosa.jpg" },
+    { name: "Nour", photo: "img/nour.jpg" },
+    { name: "Salma", photo: "img/salma.jpg" },
+    { name: "Reem", photo: "img/reem.jpg" },
+    { name: "Roba", photo: "img/roba.jpg" },
+    { name: "Alaa", photo: "img/alaa.jpg" },
+    { name: "Nawara", photo: "img/nawara.jpg" },
+    { name: "Bona", photo: "img/bona.jpg" },
+    { name: "Menna", photo: "img/menna-essam.jpg" },  // Menna Essam
   ],
 
   // ---------- The plan (we're winging it!) ----------
@@ -71,6 +73,7 @@ window.CONTENT = {
         { emoji: "🐎", title: "Horse riding",              note: "" },
         { emoji: "🛶", title: "Boat on Lake Qarun",        note: "" },
         { emoji: "🏜️", title: "Beach buggy safari",        note: "Not mandatory", warn: "At your own risk!!!" },
+        { emoji: "🧠", title: "Trivia night",              note: "To wrap up the day" },
       ],
     },
     {
@@ -79,17 +82,6 @@ window.CONTENT = {
         { time: "12:00", emoji: "🚗", title: "Depart",     note: "Pack up, hug it out, head home" },
       ],
     },
-  ],
-
-  // ---------- Fayoum spots (map pins) ----------
-  // x / y are positions on the illustrated map (0–400 wide, 0–300 tall)
-  spots: [
-    { name: "Sunrise Villa",  emoji: "🏡", x: 182, y: 140, blurb: "Home base! Our villa in Tunis Village, also where henna night happens.", maps: "https://maps.google.com/?q=Sunrise+Villa+Tunis+Village+Fayoum" },
-    { name: "Tunis Village",  emoji: "🏺", x: 150, y: 115, blurb: "Mud-brick village famous for its pottery. Bedouin party + khazaf workshop.", maps: "https://maps.google.com/?q=Tunis+Village+Fayoum" },
-    { name: "Lake Qarun",     emoji: "🛶", x: 245, y: 70,  blurb: "Egypt's oldest lake. We're taking a boat out on Day 2.", maps: "https://maps.google.com/?q=Lake+Qarun" },
-    { name: "Wadi El Rayan",  emoji: "💦", x: 150, y: 205, blurb: "Two desert lakes joined by Egypt's only waterfalls.", maps: "https://maps.google.com/?q=Wadi+El+Rayan+Waterfalls" },
-    { name: "Magic Lake",     emoji: "🪄", x: 92,  y: 178, blurb: "Changes colour through the day, surrounded by dunes.", maps: "https://maps.google.com/?q=Magic+Lake+Fayoum" },
-    { name: "Whale Valley",   emoji: "🐋", x: 62,  y: 258, blurb: "Wadi El Hitan: 40-million-year-old whale fossils in the sand.", maps: "https://maps.google.com/?q=Wadi+El+Hitan" },
   ],
 
   // ---------- Know before you go (accordion) ----------

@@ -1,13 +1,12 @@
-# 🐪 Osha's Last Safari — Fayoum bachelorette site
+# 🐪 Osha's Last Fling — Fayoum bachelorette site
 
-A playful, phone-first site for the bride's friends. Friends **brush away the sand** to uncover their invite, then get the countdown, squad, itinerary, Fayoum map, need-to-know info and a packing list.
+A playful, phone-first site for the bride's friends. Friends **brush away the sand** to uncover their invite, then get the countdown, squad polaroid wall, itinerary, need-to-know info and a packing list.
 
 ## Edit the content
 Everything you'd want to change lives in **`content.js`**. Search for `TODO` to find every placeholder:
 - bride name, trip title, dates (`start` / `end` drive the countdown)
-- squad cards (add photos to `img/` and set `photo: "img/name.jpg"`)
+- squad (crop photos to 4:5, put them in `img/` and set `photo: "img/name.jpg"`)
 - itinerary days and stops (`dress` adds a dress-code tag)
-- map pins (`x`/`y` are positions on the 400×300 map)
 - FAQ answers, packing list
 
 Keep phone numbers and exact addresses **off** the site (the link is public). Point to the group chat instead.
@@ -32,4 +31,3 @@ After deploying, add a preview image for WhatsApp: put `img/preview.jpg` (1200×
 | Plain HTML/CSS/JS, no build | React / Next.js | Nothing to install; free hosting anywhere; easy to edit |
 | Content in `content.js` (not JSON + fetch) | `content.json` | Works even when opening the file directly (no server) |
 | Packing ticks in localStorage | shared database | Personal checklist; no backend needed |
-| Illustrated SVG map + Google Maps links | embedded map library | Cute, light, fast on phones |
